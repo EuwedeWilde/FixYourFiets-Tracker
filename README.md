@@ -1,0 +1,1 @@
+Here you can find all the dev files for the fixyourfiets tracking probe. The most important files are in the scripts: dataMeasure and dataCal for calibration and dataTracker and dataProcess for visualizing the position. It took lots of time to program so feel free to ask me questions via the following email: info@euwedewil.de
