@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Visualization</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: space-around;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      width: 45%;
+      height: 600px;
+    }
+    #position, #rotation {
+      width: 100%;
+      height: 100%;
+    }
+    .actions {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="position-container">
+    <h2>Position</h2>
+    <div id="position"></div>
+  </div>
+  <div class="container" id="rotation-container">
+    <h2>Rotation</h2>
+    <div id="rotation"></div>
+    <div class="actions">
+      <h3>Actions</h3>
+      <div id="actions">
+        <p>16:00:23 Left repair station</p>
+        <p>16:00:01 Wrench stopped turning</p>
+        <p>15:59:45 Wrench starts turning to the right</p>
+        <p>15:59:20 Wrench being used</p>
+        <p>15:58:49 Entered repair station</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function fetchData() {
+      const response = await fetch('/data');
+      const data = await response.json();
+      return data;
+    }
+
+    function plotData(data) {
+      const time = data.index;
+      const acc_x = data.data.map(d => d[0]);
+      const acc_y = data.data.map(d => d[1]);
+      const acc_z = data.data.map(d => d[2]);
+
+      const trace1 = {
+        x: time,
+        y: acc_x,
+        mode: 'lines',
+        name: 'Acc X'
+      };
+
+      const trace2 = {
+        x: time,
+        y: acc_y,
+        mode: 'lines',
+        name: 'Acc Y'
+      };
+
+      const trace3 = {
+        x: time,
+        y: acc_z,
+        mode: 'lines',
+        name: 'Acc Z'
+      };
+
+      const layout = {
+        title: 'Position Data',
+        xaxis: { title: 'Time (s)' },
+        yaxis: { title: 'Acceleration (m/s²)' }
+      };
+
+      Plotly.newPlot('position', [trace1, trace2, trace3], layout);
+    }
+
+    async function init() {
+      const data = await fetchData();
+      plotData(data);
+    }
+
+    init();
+  </script>
+</body>
+</html>
